@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         hideSystemBars()
 
         findViewById<Button>(R.id.btnStart).setOnClickListener {
-            if (findViewById<AppCompatEditText>(R.id.tvName).toString().isEmpty()){
+
+            if (findViewById<AppCompatEditText>(R.id.tvName).text.toString().isEmpty()){
                 Toast.makeText(this,"Please enter your name",Toast.LENGTH_SHORT).show()
             }else{
                 val intent = Intent(this,QuizQuestionActivity::class.java)
