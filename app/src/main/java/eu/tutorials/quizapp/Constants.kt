@@ -2,9 +2,11 @@ package eu.tutorials.quizapp
 
 object Constants{
 
+    const val ID_Username = "USERNAME"
+    const val Score = "SCORE"
+    const val total = "TOTAL"
     fun getQuestions(): ArrayList<Question> {
         val questionsList = ArrayList<Question>()
-
         // 1
         val que1 = Question(
             1, "What country does this flag belong to?",

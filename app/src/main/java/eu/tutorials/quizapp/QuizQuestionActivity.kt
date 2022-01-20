@@ -1,5 +1,6 @@
 package eu.tutorials.quizapp
 
+import android.content.Intent
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +15,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
     private var mcurrentQuestion = 1
     private var mCorrect = 0
     private var mChosen:Int? = null
+    private var mName: String? = null
 
     private fun setDefaultOption(){
         val arr = ArrayList<TextView>()
@@ -58,6 +60,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
     private fun selectedQuestion(view: TextView,number: Int){
         this.setDefaultOption()
         view.setTypeface(view.typeface,Typeface.BOLD)
+        mName = intent.getStringExtra(Constants.ID_Username)
         view.background = ContextCompat.getDrawable(this,R.drawable.select_option_border)
         mChosen = number
     }
@@ -65,7 +68,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_question)
-
+        findViewById<ProgressBar>(R.id.progressBar).max = mQuestionList.size
         this.setQuestion()
         findViewById<Button>(R.id.btnSubmit).setOnClickListener(this)
     }
@@ -85,7 +88,8 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
             3 -> findViewById<TextView>(R.id.txOptionThree).background = ContextCompat.getDrawable(this,R.drawable.correct_option_border)
             4 -> findViewById<TextView>(R.id.txOptionFour).background = ContextCompat.getDrawable(this,R.drawable.correct_option_border)
         }
-        p0.text = "Next question"
+        if(mcurrentQuestion == mQuestionList.size) p0.text = "Finish"
+        else p0.text = "Next question"
 
     }
 
@@ -99,7 +103,14 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
                 if((p0 as Button).text == "Submit"){
                     if(mChosen == null) Toast.makeText(this,"Please chose answer",Toast.LENGTH_SHORT).show()
                     else check(p0)
-                }else{
+                } else if((p0 as Button).text == "Finish"){
+                    val intent = Intent(this,ResultActivity::class.java)
+                    intent.putExtra(Constants.ID_Username,mName)
+                    intent.putExtra(Constants.Score,mCorrect)
+                    intent.putExtra(Constants.total,mQuestionList.size)
+                    startActivity(intent)
+                    finish()
+                } else{
                     mcurrentQuestion += 1
                     setQuestion()
                     mChosen = null
