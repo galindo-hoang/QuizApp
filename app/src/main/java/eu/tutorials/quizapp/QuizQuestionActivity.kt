@@ -16,6 +16,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
     private var mCorrect = 0
     private var mChosen:Int? = null
     private var mName: String? = null
+    private var mDone: Boolean = false
 
     private fun setDefaultOption(){
         val arr = ArrayList<TextView>()
@@ -58,6 +59,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun selectedQuestion(view: TextView,number: Int){
+        if(mDone) return
         this.setDefaultOption()
         view.setTypeface(view.typeface,Typeface.BOLD)
         mName = intent.getStringExtra(Constants.ID_Username)
@@ -102,7 +104,10 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
             else -> {
                 if((p0 as Button).text == "Submit"){
                     if(mChosen == null) Toast.makeText(this,"Please chose answer",Toast.LENGTH_SHORT).show()
-                    else check(p0)
+                    else {
+                        check(p0)
+                        mDone = true
+                    }
                 } else if((p0 as Button).text == "Finish"){
                     val intent = Intent(this,ResultActivity::class.java)
                     intent.putExtra(Constants.ID_Username,mName)
@@ -114,6 +119,7 @@ class QuizQuestionActivity : AppCompatActivity(), View.OnClickListener {
                     mcurrentQuestion += 1
                     setQuestion()
                     mChosen = null
+                    mDone = false
                 }
             }
         }
